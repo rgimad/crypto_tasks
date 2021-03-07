@@ -1,1 +1,1 @@
-gcc main.c mars.c -o mars_test -Wall
+gcc task1.c mars.c -o task1 -Wall
