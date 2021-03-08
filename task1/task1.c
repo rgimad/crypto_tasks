@@ -75,10 +75,10 @@ char* mars_cfb_decrypt_text(const char *encrypted_text, size_t encrypted_text_le
     size_t blocks = encrypted_text_len / 16;
     uint32_t c_iv[4] = {0};
     /* dec[i] = D(enc[i - 1]) ^ enc[i] */
-    decrypt(c_iv, (uint32_t*)decryped_text);
+    encrypt(c_iv, (uint32_t*)decryped_text);
     xor_block((uint8_t*)decryped_text, (uint8_t*)encrypted_text, 16);
     for (size_t i = 1; i < blocks; i++) {
-        decrypt((uint32_t*)(encrypted_text + (i - 1)*16), (uint32_t*)(decryped_text + i*16));
+        encrypt((uint32_t*)(encrypted_text + (i - 1)*16), (uint32_t*)(decryped_text + i*16));
         xor_block((uint8_t*)(decryped_text + i*16), (uint8_t*)(encrypted_text + i*16), 16);
     }
     return decryped_text;
