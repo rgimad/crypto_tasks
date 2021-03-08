@@ -18,12 +18,12 @@ size_t mars_encrypt_text(const char *plain_text, char **encrypted_text_ptr) {
     size_t full_blocks = plain_text_len / BLK_BYTES;
     size_t remainder_len = plain_text_len % BLK_BYTES;
 
-    for (int i = 0; i < full_blocks; i++) {
+    for (size_t i = 0; i < full_blocks; i++) {
         encrypt((uint32_t*)(plain_text + i*BLK_BYTES), (uint32_t*)(*encrypted_text_ptr + i*BLK_BYTES));
     }
     if (remainder_len == 0) { return encrypted_text_len; }
     char remainder[BLK_BYTES] = {0};
-    for (int i = 0; i < remainder_len; i++) {
+    for (size_t i = 0; i < remainder_len; i++) {
         remainder[i] = plain_text[full_blocks*BLK_BYTES + i];
     }
 
@@ -36,7 +36,7 @@ char* mars_decrypt_text(const char *encrypted_text, size_t encrypted_text_len) {
     char *decryped_text = (char*)malloc(encrypted_text_len);
     size_t blocks = encrypted_text_len / BLK_BYTES;
 
-    for (int i = 0; i < blocks; i++) {
+    for (size_t i = 0; i < blocks; i++) {
         decrypt((uint32_t*)(encrypted_text + i*BLK_BYTES), (uint32_t*)(decryped_text + i*BLK_BYTES));
     }
     return decryped_text;

@@ -1,7 +1,7 @@
 #ifndef _MARS_H
 #define _MARS_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 /*uint32_t gen_mask(uint32_t x);*/
 uint32_t *set_key(const uint32_t in_key[], const uint32_t key_len);
