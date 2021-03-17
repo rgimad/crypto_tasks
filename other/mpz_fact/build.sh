@@ -1,0 +1,1 @@
+gcc -o mpz_fact mpz_fact.c -lgmp
