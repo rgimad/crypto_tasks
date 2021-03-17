@@ -1,0 +1,1 @@
+gcc -o mpz_simple1 mpz_simple1.c -lgmp
