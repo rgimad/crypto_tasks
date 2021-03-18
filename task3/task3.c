@@ -93,9 +93,17 @@ int main() {
 	printf("hash is %x %x %x %x\n", hash_arr[0], hash_arr[1], hash_arr[2], hash_arr[3]);
 
 	mpz_t h; mpz_init(h);
-	mpz_import (h, 16/*bytes = 128bit*/, 1, sizeof(char), 0, 0, hash_arr);
+	mpz_import(h, 16/*bytes = 128bit*/, 1, sizeof(char), 0, 0, hash_arr);
 
 	gmp_printf("h = %Zd\n", h);
 	//printf("h length is %lu bits\n", mpz_sizeinbase(h, 2));
+
+	mpz_t s; mpz_init(s);
+	mpz_mul(s, ro, h);
+	mpz_mul(s, s, k);
+	mpz_sub(s, s, x);
+	mpz_mod(s, s, q);
+	gmp_printf("s = %Zd\n", s);
+	printf("s length is %lu bits\n", mpz_sizeinbase(s, 2));
 
 }
