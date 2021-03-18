@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "mars_utils.h"
+#include "../task1/mars_utils.h"
 
 int main(int argc, char **argv) {
     char text[] = "Gimadutdinov Rustem Maratovich 09-712";
@@ -14,11 +14,11 @@ int main(int argc, char **argv) {
     int enc_len;
 
     printf("plain text: '%s'\n", text);
-    enc_len = mars_ecb_encrypt_text(text, &enc);
-    puts("encrypted (ecb):");
+    enc_len = mars_cfb_encrypt_text(text, &enc);
+    puts("encrypted (cfb):");
     for (int i = 0; i < enc_len; i++) { putchar(enc[i]); }
-    dec = mars_ecb_decrypt_text(enc, enc_len);
-    printf("\ndecrypted (ecb): '%s'\n", dec);
+    dec = mars_cfb_decrypt_text(enc, enc_len);
+    printf("\ndecrypted (cfb): '%s'\n", dec);
 
     free(enc);
     free(dec);
