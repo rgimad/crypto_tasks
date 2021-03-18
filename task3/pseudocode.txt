@@ -4,7 +4,7 @@ while (not isPrime(p)) {
     p = p + 2*q
 }
 gamma = рандомное из 1..2^128 - 1
-g = r^((p-1)/q) mod p
+g = gamma^((p-1)/q) mod p
 x = рандомное из 1..q-1
 y = g^x mod p
 k = рандомное ? бит

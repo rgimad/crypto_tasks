@@ -10,8 +10,7 @@
 
 
 /* Sets r to a random GMP integer with the specified number of bits. */
-void get_random_n_bits(mpz_t r, size_t bits)
-{
+void get_random_n_bits(mpz_t r, size_t bits) {
 	size_t size = (size_t) ceilf(bits/8);
 	char *buffer = (char*) malloc(sizeof(char)*size);
 	int prg = open("/dev/random", O_RDONLY);
@@ -19,6 +18,13 @@ void get_random_n_bits(mpz_t r, size_t bits)
 	close(prg);
 	mpz_import (r, size, 1, sizeof(char), 0, 0, buffer);
 	free(buffer);
+}
+
+/* Sets r to a random GMP integer smaller than max. */
+void get_random_n(mpz_t r, mpz_t max) {
+	do {
+		get_random_n_bits(r, mpz_sizeinbase(max, 2));
+	} while (mpz_cmp(r, max) >= 0);
 }
 
 int main() {
@@ -38,21 +44,42 @@ int main() {
 		mpz_add(p, p, q);
 	}
 	gmp_printf("p = %Zd\n", p);
+	printf("p length is %lu bits\n", mpz_sizeinbase(p, 2));
 
 	mpz_t tmp; mpz_init(tmp);
 	mpz_t res; mpz_init(res);
-	mpz_set(tmp, p);
-	mpz_sub_ui(tmp, tmp, 1);
+	mpz_sub_ui(tmp, p, 1);
 	gmp_printf("p - 1 = %Zd\n", tmp);
 
-	mpz_mod(res, tmp, q);
+	mpz_mod(res, tmp, q); // res = tmp % q;
 	gmp_printf("(p - 1) mod q = %Zd\n", res);
 
-	// TODO check is g generated correctly?
 	mpz_t g; mpz_init(g);
 	get_random_n_bits(g, 128); 	// g = random 128 bit >= 1
 	mpz_fdiv_q(res, tmp, q); // res = tmp / q  ; f means floor
 	mpz_powm(g, g, res, p);
 	gmp_printf("g = %Zd\n", g);
+	//printf("g length is %lu bits\n", mpz_sizeinbase(g, 2));
+
+	mpz_t x; mpz_init(x);
+	get_random_n(x, q);
+	gmp_printf("x = %Zd\n", x);
+
+	mpz_t y; mpz_init(y);
+	mpz_powm(y, g, x, p);
+	gmp_printf("y = %Zd\n", y);
+	//printf("y length is %lu bits\n", mpz_sizeinbase(y, 2));
+
+	mpz_t k; mpz_init(k);
+	get_random_n_bits(k, 128);
+
+	mpz_t r; mpz_init(r);
+	mpz_powm(r, g, k, p);
+	gmp_printf("r = %Zd\n", r);
+	printf("r length is %lu bits\n", mpz_sizeinbase(r, 2));
+
+	mpz_t ro; mpz_init(ro);
+	mpz_mod(ro, r, q);
+	gmp_printf("ro = %Zd\n", ro);
 
 }
