@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include "../task2/hash.h"
 
+/* Digital signature using ElGamal scheme */
 
 /* Sets r to a random GMP integer with the specified number of bits. */
 void get_random_n_bits(mpz_t r, size_t bits) {
@@ -98,6 +99,7 @@ int main() {
 	gmp_printf("h = %Zd\n", h);
 	//printf("h length is %lu bits\n", mpz_sizeinbase(h, 2));
 
+	/* s = (ro*h*k - x) mod q */
 	mpz_t s; mpz_init(s);
 	mpz_mul(s, ro, h);
 	mpz_mul(s, s, k);
@@ -106,7 +108,7 @@ int main() {
 	gmp_printf("s = %Zd\n", s);
 	printf("s length is %lu bits\n", mpz_sizeinbase(s, 2));
 
-	// Checking:
+	/* Checking: (using equation: r^(ro*h) mod p == (g^s)*y mod p */
 	mpz_t left; mpz_init(left);
 	mpz_mul(tmp, ro, h);
 	mpz_powm(left, r, tmp, p);
@@ -118,6 +120,11 @@ int main() {
 	mpz_mul(right, right, tmp);
 	mpz_mod(right, right, p);
 	gmp_printf("righ = %Zd\n", right);
+
+	// if left == right => signature for this document is CORRECT
+	// TODO make this check programmatically
+	// TODO refactoring: move signing and checking to separate functions
+	// TODO test with corrupted message also
 
 
 }
