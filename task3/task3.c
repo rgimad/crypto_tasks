@@ -106,4 +106,18 @@ int main() {
 	gmp_printf("s = %Zd\n", s);
 	printf("s length is %lu bits\n", mpz_sizeinbase(s, 2));
 
+	// Checking:
+	mpz_t left; mpz_init(left);
+	mpz_mul(tmp, ro, h);
+	mpz_powm(left, r, tmp, p);
+	gmp_printf("left = %Zd\n", left);
+
+	mpz_t right; mpz_init(right);
+	mpz_powm(right, g, s, p);
+	mpz_mod(tmp, y, p);
+	mpz_mul(right, right, tmp);
+	mpz_mod(right, right, p);
+	gmp_printf("righ = %Zd\n", right);
+
+
 }
