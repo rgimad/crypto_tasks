@@ -7,13 +7,14 @@
 #include <math.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "../task2/hash.h"
 
 
 /* Sets r to a random GMP integer with the specified number of bits. */
 void get_random_n_bits(mpz_t r, size_t bits) {
 	size_t size = (size_t) ceilf(bits/8);
 	char *buffer = (char*) malloc(sizeof(char)*size);
-	int prg = open("/dev/random", O_RDONLY);
+	int prg = open("/dev/urandom", O_RDONLY);
 	read(prg, buffer, size);
 	close(prg);
 	mpz_import (r, size, 1, sizeof(char), 0, 0, buffer);
@@ -22,10 +23,15 @@ void get_random_n_bits(mpz_t r, size_t bits) {
 
 /* Sets r to a random GMP integer smaller than max. */
 void get_random_n(mpz_t r, mpz_t max) {
+	int cnt = 0;
 	do {
 		get_random_n_bits(r, mpz_sizeinbase(max, 2));
+		cnt++;
 	} while (mpz_cmp(r, max) >= 0);
+	printf("cnt = %d\n", cnt);
 }
+
+char message[] = "Gimadutdinov Rustem Maratovich 09-712";
 
 int main() {
 	mpz_t q;
@@ -81,5 +87,15 @@ int main() {
 	mpz_t ro; mpz_init(ro);
 	mpz_mod(ro, r, q);
 	gmp_printf("ro = %Zd\n", ro);
+
+	uint32_t hash_arr[4];
+	hash_text(message, hash_arr);
+	printf("hash is %x %x %x %x\n", hash_arr[0], hash_arr[1], hash_arr[2], hash_arr[3]);
+
+	mpz_t h; mpz_init(h);
+	mpz_import (h, 16/*bytes = 128bit*/, 1, sizeof(char), 0, 0, hash_arr);
+
+	gmp_printf("h = %Zd\n", h);
+	//printf("h length is %lu bits\n", mpz_sizeinbase(h, 2));
 
 }
